@@ -1,1 +1,10 @@
-<p>dialog-result works!</p>
+<div class="dialog">
+     <h2 class="dialog__header">{{ getHeader() }}</h2>
+     <p class="dialog__text" [ngClass]="{'dialog__text--green': getWinner() === cellStatuses.USER, 'dialog__text--red': getWinner() === cellStatuses.PC }">
+          <span>Рахунок : </span><span>{{ score.userCount }} / {{ score.pcCount }}</span>
+     </p>
+     <div class="dialog__controls">
+          <button mat-stroked-button color="accent" class="game-field__button" (click)="startNewGame()">Почати нову гру</button>
+          <button mat-stroked-button color="warn" class="game-field__button" mat-dialog-close>Закрити</button>
+     </div>
+</div>

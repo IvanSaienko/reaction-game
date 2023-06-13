@@ -1,0 +1,46 @@
+$text-color: rgb(80, 80, 80);
+$text-color-green: rgb(0, 100, 0);
+$text-color-red: rgb(122, 39, 0);
+
+.dialog {
+     width: 300px;
+     display: flex;
+     padding: 20px;
+     align-items: center;
+     flex-direction: column;
+
+     &__header {
+          font-size: 2em;
+          font-weight: bolder;
+          color: $text-color;
+     }
+
+     &__text {
+          font-weight: bold;
+          font-size: 1.5em;
+          color: $text-color;
+
+          &--green {
+               color: $text-color-green;
+          }
+
+          &--red {
+               color: $text-color-red;
+          }
+     }
+
+     &__controls {
+          display: flex;
+          justify-content: space-between;
+          width: 100%;
+          margin-top: 10px;
+
+          button {
+               transition: all 100ms;
+
+               &:hover {
+                    transform: scale(1.1);
+               }
+          }
+     }
+}
