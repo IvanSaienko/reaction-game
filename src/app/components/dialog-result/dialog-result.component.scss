@@ -1,23 +1,21 @@
-$text-color: rgb(80, 80, 80);
-$text-color-green: rgb(0, 100, 0);
-$text-color-red: rgb(122, 39, 0);
+@import "/src/assets/styles/variables.scss";
 
 .dialog {
-     width: 300px;
+     width: $dialog-width;
      display: flex;
      padding: 20px;
      align-items: center;
      flex-direction: column;
 
      &__header {
-          font-size: 2em;
+          font-size: $header-font-size;
           font-weight: bolder;
           color: $text-color;
      }
 
      &__text {
           font-weight: bold;
-          font-size: 1.5em;
+          font-size: $text-font-size-big;
           color: $text-color;
 
           &--green {

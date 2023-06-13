@@ -1,0 +1,17 @@
+@import "/src/assets/styles/variables.scss";
+
+.score {
+     &__header {
+          font-size: $header-font-size;
+          font-weight: bolder;
+          color: $text-color;
+     }
+
+     &__text {
+          font-size: $text-font-size-big;
+          font-weight: bold;
+          color: $text-color;
+          text-align: center;
+          min-width: 1em;
+     }
+}

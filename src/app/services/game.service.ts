@@ -5,13 +5,12 @@ import { CELL_STATUS, CellData } from '../types/cell';
 import { Subject } from 'rxjs';
 import { CommonService } from './common.service';
 
+export const DEFAULT_REACTION_TIME = 1000;
+export const DEFAULT_MAX_SCORE = 10;
 const MAP_SIZE = {
   cols: 10,
   rows: 10
 }
-
-export const DEFAULT_REACTION_TIME = 3000;
-export const DEFAULT_MAX_SCORE = 10;
 
 @Injectable({
   providedIn: 'root'
@@ -19,17 +18,15 @@ export const DEFAULT_MAX_SCORE = 10;
 export class GameService {
   public gameMap: CellData[][];
   public highlightCell?: CellData;
+  public gameScore: GameScore;
+  public isFinish$: Subject<void> = new Subject();
+  public reactionTime$: Subject<number> = new Subject<number>();
+  
   private allCells: CellData[];
   private freeCells: CellData[];
-
-  public gameScore: GameScore;
-
-  public reactionTime$: Subject<number> = new Subject<number>();
   private gameOptions: GameOptions;
-
-  public isFinish$: Subject<void> = new Subject();
-
   private timeoutId: any;
+
 
   constructor(private commonServive: CommonService) {
     this.gameOptions = { // default value
@@ -103,7 +100,7 @@ export class GameService {
   }
 
   public handleRoundActions(cell: CellData, player: CELL_STATUS): void {
-    if (cell.id !== this.highlightCell?.id) { return; }
+    if (cell.id !== this.highlightCell?.id || this.gameScore.pcCount >= 10 || this.gameScore.userCount >= 10) { return; }
 
     clearTimeout(this.timeoutId);
     this.allCells[cell.id - 1].status = player;

@@ -1,0 +1,40 @@
+@import '/src/assets/styles/variables.scss';
+
+.settings {
+     &__form {
+          margin-bottom: 2em;
+     }
+
+     &__label {
+          font-size: $header-font-size;
+          font-weight: bolder;
+          color: $text-color;
+          display: inline-block;
+          margin-bottom: 1em;
+     }
+
+     &__input-wrapper {
+          display: inline-block;
+          position: relative;
+          background-color: $input-color;
+          border-radius: 10px;
+          padding-left: 10px;
+
+          &::after {
+               display: inline-block;
+               content: ' ms';
+               font-size: $text-font-size;
+             }
+     }
+     &__input {
+          display: inline-block;
+          width: 80%;
+          height: 1.6em;
+          background-color: transparent;
+          border: 0;
+          border-top-left-radius: 5px;
+          border-bottom-left-radius: 5px;
+          box-sizing: border-box;
+          outline: none;
+     }
+}

@@ -9,9 +9,9 @@
                [class.game-field__cell--yellow]="gameService.highlightCell && gameService.highlightCell.id === cell.id"></td>
           </tr>
      </table>
-     <button mat-stroked-button color="primary" class="game-field__button" [disabled]="!isGameReady" (click)="startNewGame()">Почати</button>
 </div>
-<div class="game-field__container">
+<div class="game-field__container game-field__container--less">
      <game-settings></game-settings>
      <game-score></game-score>
+     <button mat-stroked-button color="primary" class="game-field__button" [disabled]="!isGameReady" (click)="startNewGame()">Почати</button>
 </div>

@@ -1,3 +1,5 @@
+@import '/src/assets/styles/variables.scss';
+
 :host {
      width: 100vw;
      height: 100vh;
@@ -12,8 +14,12 @@
      &__container {
           display: flex;
           flex-direction: column;
-          align-items: center;
-          justify-content: flex-start;
+          margin: 5em 5em 0 0;
+
+          &--less {
+               margin-right: 0;
+               width: 17em;
+          }
      }
 
      &__row {
@@ -55,5 +61,12 @@
 
      &__button {
           margin-top: 2em;
+          transition: all 100ms;
+          background-color: $btn-orange-color;
+
+          &:hover {
+               transform: scale(1.1);
+               background-color: $btn-orange-hover-color;
+          }
      }
 }
