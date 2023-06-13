@@ -46,6 +46,27 @@ export class GameService {
     this.reactionTime$?.next(time);
   }
 
+  public newGame(options: GameOptions): void {
+    this.resetCells();
+    this.gameOptions.reactionTime = options.reactionTime;
+    this.gameScore = { userCount: 0, pcCount: 0 };
+    this.startRound();
+  }
+
+  public handleRoundActions(cell: CellData, player: CELL_STATUS): void {
+    if (cell.id !== this.highlightCell?.id || this.gameScore.pcCount >= 10 || this.gameScore.userCount >= 10) { return; }
+
+    clearTimeout(this.timeoutId);
+    this.allCells[cell.id - 1].status = player;
+    this.gameMap[cell.position.y][cell.position.x].status = player;
+    this.freeCells = this.getFreeCells();
+    this.setScore(player);
+
+    if (this.isFinish()) { return; }
+
+    this.startRound();
+  }
+
   private getAllCells(rows: number, cols: number): CellData[] {
     const allCellsArr: CellData[] = [];
     let index = 1;
@@ -84,37 +105,11 @@ export class GameService {
     this.highlightCell = undefined;
   }
 
-  public newGame(options: GameOptions): void {
-    this.resetCells();
-    this.gameOptions.reactionTime = options.reactionTime;
-    this.gameScore = { userCount: 0, pcCount: 0 };
-    this.startRound();
-  }
-
   private startRound(): void {
     this.highlightCell = this.commonServive.arrayRandElement(this.freeCells);
-    console.log('reactionTime', this.gameOptions.reactionTime);
     this.timeoutId = setTimeout(() => {
       this.handleRoundActions(this.highlightCell as CellData, CELL_STATUS.PC);
     }, this.gameOptions.reactionTime);
-  }
-
-  public handleRoundActions(cell: CellData, player: CELL_STATUS): void {
-    if (cell.id !== this.highlightCell?.id || this.gameScore.pcCount >= 10 || this.gameScore.userCount >= 10) { return; }
-
-    clearTimeout(this.timeoutId);
-    this.allCells[cell.id - 1].status = player;
-    this.gameMap[cell.position.y][cell.position.x].status = player;
-    this.freeCells = this.getFreeCells();
-    this.setScore(player);
-
-    if (this.isFinish()) { return; }
-
-    this.startRound();
-  }
-
-  public finishGame(): void {
-    clearTimeout(this.timeoutId);
   }
 
   private setScore(player: CELL_STATUS): void {
