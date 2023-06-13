@@ -1,1 +1,17 @@
-<p>game works!</p>
+<div class="game-field__container">
+     <table class="game-field">
+          <tr *ngFor="let row of gameMap; let x = index" class="game-field__row">
+               <td *ngFor="let cell of row; let y = index"
+               (click)="gameService.handleRoundActions(cell, CELL_STATUS.USER)"
+               class="game-field__cell"
+               [class.game-field__cell--red]="cell.status === CELL_STATUS.PC"
+               [class.game-field__cell--green]="cell.status === CELL_STATUS.USER"
+               [class.game-field__cell--yellow]="gameService.highlightCell && gameService.highlightCell.id === cell.id"></td>
+          </tr>
+     </table>
+     <button mat-stroked-button color="primary" class="game-field__button" [disabled]="!isGameReady" (click)="startNewGame()">Почати</button>
+</div>
+<div class="game-field__container">
+     <game-settings></game-settings>
+     <game-score></game-score>
+</div>

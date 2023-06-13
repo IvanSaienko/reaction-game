@@ -1,0 +1,59 @@
+:host {
+     width: 100vw;
+     height: 100vh;
+     display: flex;
+     justify-content: center;
+}
+
+.game-field {
+     display: flex;
+     flex-direction: column;
+
+     &__container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: flex-start;
+     }
+
+     &__row {
+          display: flex;
+     }
+
+     &__cell {
+          margin: 5px;
+          border-radius: 10%;
+
+          max-width: 50px;
+          max-height: 50px;
+          width: 10vh;
+          height: 10vh;
+
+          cursor: pointer;
+          transition: all 100ms;
+
+          &:hover {
+               transform: scale(1.1);
+          }
+          
+
+          background-color: cornflowerblue;
+
+          &--yellow {
+          background-color: yellow;
+          transform: scale(1.1);
+          }
+
+          &--red {
+          background-color: darkred;
+          }
+
+          &--green {
+          background-color: darkseagreen;
+          }
+     }
+
+     &__button {
+          margin-top: 2em;
+     }
+}

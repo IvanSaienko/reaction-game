@@ -1,1 +1,7 @@
-<p>settings works!</p>
+<form class="settints__form">
+     <mat-form-field class="settints__form-field">
+          <mat-label class="settints__label">Час на реагування</mat-label>
+          <input class="settints__input" type="number" name="time" matInput [(ngModel)]="time" (change)="timeChoosed()" required>
+          <span matSuffix>ms &nbsp;</span>
+     </mat-form-field>
+</form>
