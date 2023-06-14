@@ -1,46 +1,34 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { GameComponent } from './game.component';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, InjectionToken } from '@angular/core';
 import { DEFAULT_REACTION_TIME, GameService } from 'src/app/services/game.service';
-import { CELL_STATUS } from 'src/app/types/cell';
-import { BehaviorSubject, Subject, Subscription, of } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 
 describe('GameComponent', () => {
   let component: GameComponent;
   let fixture: ComponentFixture<GameComponent>;
-  let gameServive: GameService;
+  let gameService: GameService;
 
-  // const mockGameService = jasmine.createSpyObj('mockGameService', ['gameMap', 'reactionTime$', 'isFinish$', 'newGame']);
-  const mockGameService = jasmine.createSpyObj('GameService', {
-    gameMap: [[{ status: CELL_STATUS.FREE }]],
-    reactionTime$: new Subject<number>(),
-    isFinish$: () => of(),
-    newGame: undefined
-  });
+  const mockGameService = jasmine.createSpyObj<GameService>('GameService', ['reactionTime$', 'gameMap', 'isFinish$', 'newGame', 'gameScore']);
 
+  const mockMatDialog = {};
+  const mockInjectionToken = new InjectionToken('mat-mdc-dialog-scroll-strategy');
+  const mockReactionTime = 1000;
 
   beforeEach(() => {
-    // gameServiceMock = jasmine.createSpyObj('GameService', {
-    //   gameMap: [[{ status: CELL_STATUS.FREE }]],
-    //   reactionTime$: of(500),
-    //   isFinish$: of(),
-    //   newGame: undefined
-    // });
-    // gameServiceMock = jasmine.createSpyObj('GameService', ['gameMap', 'reactionTime$', 'isFinish$', 'newGame']);
-
     TestBed.configureTestingModule({
       declarations: [GameComponent],
       providers: [
-        { provide: GameService, useValue: mockGameService }
+        { provide: GameService, useValue: mockGameService },
+        { provide: MatDialog, useValue: mockMatDialog },
+        { provide: mockInjectionToken, useValue: {} }
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     });
-
     fixture = TestBed.createComponent(GameComponent);
     component = fixture.componentInstance;
+    gameService = TestBed.inject(GameService);
 
-    gameServive = TestBed.inject(GameService);
   });
 
   afterEach(() => {
@@ -52,7 +40,6 @@ describe('GameComponent', () => {
   });
 
   it('should call gameService.newGame with reactionTime if it is set', () => {
-    const mockReactionTime = 1500;
     component['reactionTime'] = mockReactionTime;
     component.startNewGame();
     expect(mockGameService.newGame).toHaveBeenCalledWith({ reactionTime: mockReactionTime });
@@ -63,4 +50,18 @@ describe('GameComponent', () => {
     expect(mockGameService.newGame).toHaveBeenCalledWith({ reactionTime: DEFAULT_REACTION_TIME });
   });
 
+  it('should set reactionTime', () => {
+    component['onReactionTimeSet'](mockReactionTime);
+    expect(component['reactionTime']).toBe(mockReactionTime);
+  });
+
+  it('should set isGameReady if there is a time in arguments', () => {
+    component['onReactionTimeSet'](mockReactionTime);
+    expect(component['isGameReady']).toBe(true);
+  });
+
+  it('should set isGameReady to false if there is no time in arguments', () => {
+    component['onReactionTimeSet'](undefined as unknown as number);
+    expect(component['isGameReady']).toBe(false);
+  });
 });

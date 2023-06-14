@@ -29,11 +29,10 @@
      &__cell {
           margin: 5px;
           border-radius: 10%;
-
           max-width: 50px;
           max-height: 50px;
-          width: 10vh;
-          height: 10vh;
+          width: $game-cell-size;
+          height: $game-cell-size;
 
           cursor: pointer;
           transition: all 100ms;

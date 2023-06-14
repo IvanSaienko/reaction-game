@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { GameScore } from '../types/game-score';
 import { GameOptions } from '../types/game-options';
 import { CELL_STATUS, CellData } from '../types/cell';
-import { Subject } from 'rxjs';
+import { Observable, Subject, Subscription, delay, of, timer } from 'rxjs';
 import { CommonService } from './common.service';
 
 export const DEFAULT_REACTION_TIME = 1000;
 export const DEFAULT_MAX_SCORE = 10;
-const MAP_SIZE = {
+export const MAP_SIZE = {
   cols: 10,
   rows: 10
 }
@@ -25,11 +25,10 @@ export class GameService {
   private allCells: CellData[];
   private freeCells: CellData[];
   private gameOptions: GameOptions;
-  private timeoutId: any;
-
+  private timerSubscription?: Subscription;
 
   constructor(private commonServive: CommonService) {
-    this.gameOptions = { // default value
+    this.gameOptions = {
       reactionTime: DEFAULT_REACTION_TIME,
       maxScore: DEFAULT_MAX_SCORE
     };
@@ -50,13 +49,19 @@ export class GameService {
     this.resetCells();
     this.gameOptions.reactionTime = options.reactionTime;
     this.gameScore = { userCount: 0, pcCount: 0 };
-    this.startRound();
+    if(this.timerSubscription) {
+      this.timerSubscription.unsubscribe();
+    }
+    this.timerSubscription = this.startRound().subscribe(() => {
+      this.handleRoundActions(this.highlightCell as CellData, CELL_STATUS.PC);
+    });
   }
 
   public handleRoundActions(cell: CellData, player: CELL_STATUS): void {
-    if (cell.id !== this.highlightCell?.id || this.gameScore.pcCount >= 10 || this.gameScore.userCount >= 10) { return; }
-
-    clearTimeout(this.timeoutId);
+    if (cell.id !== this.highlightCell?.id || this.gameScore.pcCount >= DEFAULT_MAX_SCORE || this.gameScore.userCount >= DEFAULT_MAX_SCORE) { return; }
+    if(this.timerSubscription) {
+      this.timerSubscription.unsubscribe();
+    }
     this.allCells[cell.id - 1].status = player;
     this.gameMap[cell.position.y][cell.position.x].status = player;
     this.freeCells = this.getFreeCells();
@@ -64,7 +69,9 @@ export class GameService {
 
     if (this.isFinish()) { return; }
 
-    this.startRound();
+    this.timerSubscription = this.startRound().subscribe(() => {
+      this.handleRoundActions(this.highlightCell as CellData, CELL_STATUS.PC);
+    });
   }
 
   private getAllCells(rows: number, cols: number): CellData[] {
@@ -105,11 +112,9 @@ export class GameService {
     this.highlightCell = undefined;
   }
 
-  private startRound(): void {
+  private startRound(): Observable<number> {
     this.highlightCell = this.commonServive.arrayRandElement(this.freeCells);
-    this.timeoutId = setTimeout(() => {
-      this.handleRoundActions(this.highlightCell as CellData, CELL_STATUS.PC);
-    }, this.gameOptions.reactionTime);
+    return timer(this.gameOptions.reactionTime);
   }
 
   private setScore(player: CELL_STATUS): void {
@@ -123,7 +128,7 @@ export class GameService {
   }
 
   private isFinish(): boolean {
-    if (this.gameScore.pcCount >= 10 || this.gameScore.userCount >= 10) {
+    if (this.gameScore.pcCount >= DEFAULT_MAX_SCORE || this.gameScore.userCount >= DEFAULT_MAX_SCORE) {
       this.isFinish$.next();
       return true;
     }

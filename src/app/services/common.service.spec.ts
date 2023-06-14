@@ -19,6 +19,17 @@ describe('CommonService', () => {
     expect(chunkedArr[0][0]).toBe(1);
   });
 
+  it('should throw new Error if second argument <= 0', () => {
+    var error;
+    try{
+      service.chunkArray<number>(arrNumbers, 0);
+    }
+    catch(err){
+      error = err;
+    }
+    expect(error).toBeDefined();
+  });  
+
   it('should return random item of array', () => {
     const rndItem = service.arrayRandElement<number>(arrNumbers);
     expect(arrNumbers.includes(rndItem)).toBeTruthy();

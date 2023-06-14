@@ -28,10 +28,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.timeInputSubscription = this.gameService.reactionTime$.subscribe(time => {
-      this.isGameReady = time ? true : false;
-      this.reactionTime = time;
-    });
+    this.timeInputSubscription = this.gameService.reactionTime$.subscribe(this.onReactionTimeSet.bind(this));
     this.gameEndSubscription = this.gameService.isFinish$.pipe(
       tap(() => {
         this.dialogRef = this.dialog.open(DialogResultComponent, {
@@ -49,12 +46,16 @@ export class GameComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-
   startNewGame(): void {
     const options: GameOptions = {
       reactionTime: this.reactionTime ? this.reactionTime : DEFAULT_REACTION_TIME
     }
     this.gameService.newGame(options);
+  }
+
+  private onReactionTimeSet(time: number): void {
+    this.isGameReady = time ? true : false;
+    this.reactionTime = time;
   }
 
   ngOnDestroy(): void {
