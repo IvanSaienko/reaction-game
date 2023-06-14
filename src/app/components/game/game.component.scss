@@ -1,0 +1,71 @@
+@import '/src/assets/styles/variables.scss';
+
+:host {
+     width: 100vw;
+     height: 100vh;
+     display: flex;
+     justify-content: center;
+}
+
+.game-field {
+     display: flex;
+     flex-direction: column;
+
+     &__container {
+          display: flex;
+          flex-direction: column;
+          margin: 5em 5em 0 0;
+
+          &--less {
+               margin-right: 0;
+               width: 17em;
+          }
+     }
+
+     &__row {
+          display: flex;
+     }
+
+     &__cell {
+          margin: 5px;
+          border-radius: 10%;
+          max-width: 50px;
+          max-height: 50px;
+          width: $game-cell-size;
+          height: $game-cell-size;
+
+          cursor: pointer;
+          transition: all 100ms;
+
+          &:hover {
+               transform: scale(1.1);
+          }
+          
+
+          background-color: cornflowerblue;
+
+          &--yellow {
+          background-color: yellow;
+          transform: scale(1.1);
+          }
+
+          &--red {
+          background-color: darkred;
+          }
+
+          &--green {
+          background-color: darkseagreen;
+          }
+     }
+
+     &__button {
+          margin-top: 2em;
+          transition: all 100ms;
+          background-color: $btn-orange-color;
+
+          &:hover {
+               transform: scale(1.1);
+               background-color: $btn-orange-hover-color;
+          }
+     }
+}
